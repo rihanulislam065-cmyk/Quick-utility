@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Utility - Professional Toolbox & Quick Social</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- QRCode.js Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#eff6ff', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans transition-colors duration-200">
+
+  <!-- Header with Quick Utility Name & Top Quick Social / Settings Options -->
+  <header class="sticky top-0 z-40 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-700">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-2 cursor-pointer" onclick="switchTab('apps')">
+        <i class="fa-solid fa-screwdriver-wrench text-brand-600 text-2xl"></i>
+        <span class="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white">Quick <span class="text-brand-600">Utility</span></span>
+      </div>
+      
+      <!-- Top Right: Quick Social Button & Theme Toggle -->
+      <div class="flex items-center gap-2.5">
+        <button onclick="openQuickSocialModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-brand-600 to-indigo-600 text-white hover:opacity-90 transition shadow-md">
+          <i class="fa-solid fa-globe"></i> Quick Social
+        </button>
+        <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 transition">
+          <i id="themeIcon" class="fa-solid fa-moon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="bg-gradient-to-b from-brand-50 to-transparent dark:from-slate-800 dark:to-transparent py-8 px-4 text-center">
+    <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-2">Your Everyday Digital Toolbox</h1>
+    <p class="text-slate-600 dark:text-slate-300 text-sm md:text-base max-w-xl mx-auto">Fast, Free, & No Sign-up Required. Leave Applications, Tools, Converters & Quick Social.</p>
+  </section>
+
+  <!-- Main Navigation Tabs -->
+  <nav class="max-w-7xl mx-auto px-4 mb-6 w-full overflow-hidden">
+    <div class="flex items-center gap-2 overflow-x-auto no-scrollbar border-b border-slate-200 dark:border-slate-700 pb-2">
+      <button onclick="switchTab('apps')" id="tab-apps" class="tab-btn active px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap bg-brand-600 text-white flex-shrink-0">
+        <i class="fa-solid fa-file-pen mr-1.5"></i> Leave & Letter Generator
+      </button>
+      <button onclick="switchTab('tools')" id="tab-tools" class="tab-btn px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex-shrink-0">
+        <i class="fa-solid fa-toolbox mr-1.5"></i> Digital Tools & QR
+      </button>
+      <button onclick="switchTab('math')" id="tab-math" class="tab-btn px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 flex-shrink-0">
+        <i class="fa-solid fa-calculator mr-1.5"></i> Math & Converters
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content Container -->
+  <main class="max-w-7xl mx-auto px-4 flex-grow mb-12 w-full">
+
+    <!-- TAB 1: Leave & Letter Generator -->
+    <div id="content-apps" class="tab-content grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        <h3 class="font-bold text-xl mb-2 flex items-center gap-2"><i class="fa-solid fa-file-pen text-brand-500"></i> Leave & Letter Generator</h3>
+        <div class="space-y-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 mb-1">Type:</label>
+            <select id="appType" onchange="generateApplication()" class="w-full p-2.5 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg">
+              <option value="leave">Leave Application</option>
+              <option value="sick">Sick Leave</option>
+              <option value="job">Job Application</option>
+              <option value="resignation">Resignation Letter</option>
+            </select>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-xs font-semibold text-slate-500 mb-1">Your Name:</label><input type="text" id="appName" oninput="generateApplication()" class="w-full p-2.5 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg" placeholder="Rahul"></div>
+            <div><label class="block text-xs font-semibold text-slate-500 mb-1">Receiver Name:</label><input type="text" id="appReceiver" oninput="generateApplication()" class="w-full p-2.5 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg" placeholder="Manager"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div><label class="block text-xs font-semibold text-slate-500 mb-1">Start Date:</label><input type="date" id="appStartDate" oninput="generateApplication()" class="w-full p-2.5 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg"></div>
+            <div><label class="block text-xs font-semibold text-slate-500 mb-1">End Date:</label><input type="date" id="appEndDate" oninput="generateApplication()" class="w-full p-2.5 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg"></div>
+          </div>
+          <div><label class="block text-xs font-semibold text-slate-500 mb-1">Reason:</label><input type="text" id="appReason" oninput="generateApplication()" class="w-full p-2.5 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg" placeholder="Fever / Personal work"></div>
+        </div>
+        </div>
+      <div class="bg-white dark:bg-slate-800 p-6 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col">
+        <h3 class="font-bold text-lg mb-2 flex items-center gap-2"><i class="fa-solid fa-eye text-brand-500"></i> Preview & Copy</h3>
+        <textarea id="appResultBox" readonly class="w-full h-64 p-3 text-xs font-mono bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg mb-3"></textarea>
+        <button onclick="copyToClipboard('appResultBox')" class="w-full py-2.5 bg-brand-600 text-white font-bold rounded-lg text-sm hover:bg-brand-700 transition"><i class="fa-solid fa-copy"></i> Copy Application</button>
+      </div>
+    </div>
+
+    <!-- TAB 2: Digital Tools & QR -->
+    <div id="content-tools" class="tab-content hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        <h3 class="font-bold text-lg mb-2 flex items-center gap-2"><i class="fa-solid fa-qrcode text-brand-500"></i> QR Code Generator</h3>
+        <input type="text" id="qrText" class="w-full p-2.5 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg mb-3" placeholder="URL or Text">
+        <button onclick="generateQRCode()" class="w-full py-2 bg-brand-600 text-white font-medium rounded-lg text-sm hover:bg-brand-700 transition mb-3">Generate QR</button>
+        <div id="qrcode" class="flex justify-center p-3 bg-white rounded-lg min-h-[140px] items-center"></div>
+      </div>
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        <h3 class="font-bold text-lg mb-2 flex items-center gap-2"><i class="fa-solid fa-font text-brand-500"></i> Word Counter</h3>
+        <textarea id="counterInput" oninput="updateWordCount()" class="w-full h-28 p-3 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg" placeholder="Type here..."></textarea>
+        <div class="grid grid-cols-3 gap-2 mt-3 text-center text-xs">
+          <div class="bg-slate-100 dark:bg-slate-700 p-2 rounded"><span id="wordCount" class="font-bold text-sm">0</span> Words</div>
+          <div class="bg-slate-100 dark:bg-slate-700 p-2 rounded"><span id="charCount" class="font-bold text-sm">0</span> Chars</div>
+          <div class="bg-slate-100 dark:bg-slate-700 p-2 rounded"><span id="sentenceCount" class="font-bold text-sm">0</span> Sentences</div>
+        </div>
+      </div>
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        <h3 class="font-bold text-lg mb-2 flex items-center gap-2"><i class="fa-solid fa-key text-brand-500"></i> Password Generator</h3>
+        <div class="flex gap-2 mb-3">
+          <input type="text" id="pwdResult" readonly class="w-full p-2 text-sm font-mono bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg">
+          <button onclick="copyToClipboard('pwdResult')" class="px-3 bg-slate-100 dark:bg-slate-700 rounded"><i class="fa-solid fa-copy"></i></button>
+        </div>
+        <button onclick="generatePassword()" class="w-full py-2 bg-brand-600 text-white font-medium rounded-lg text-sm hover:bg-brand-700 transition">Generate Password</button>
+      </div>
+    </div>
+
+    <!-- TAB 3: Math & Converters -->
+    <div id="content-math" class="tab-content hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        <h3 class="font-bold text-lg mb-2"><i class="fa-solid fa-road text-brand-500"></i> KM & Mile Converter</h3>
+        <div class="space-y-3">
+          <div><label class="text-xs font-semibold text-slate-500">KM</label><input type="number" id="valKm" oninput="convertDist('km')" class="w-full p-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg"></div>
+          <div><label class="text-xs font-semibold text-slate-500">Miles</label><input type="number" id="valMile" oninput="convertDist('mile')" class="w-full p-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg"></div>
+        </div>
+      </div>
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        <h3 class="font-bold text-lg mb-2"><i class="fa-solid fa-ruler text-brand-500"></i> CM & Meter Converter</h3>
+        <div class="space-y-3">
+          <div><label class="text-xs font-semibold text-slate-500">CM</label><input type="number" id="valCm" oninput="convertLength('cm')" class="w-full p-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg"></div>
+          <div><label class="text-xs font-semibold text-slate-500">Meter</label><input type="number" id="valMeter" oninput="convertLength('meter')" class="w-full p-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg"></div>
+        </div>
+      </div>
+      <div class="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+        <h3 class="font-bold text-lg mb-2"><i class="fa-solid fa-weight-scale text-brand-500"></i> Weight Converter</h3>
+        <div class="space-y-3">
+          <div><label class="text-xs font-semibold text-slate-500">KG</label><input type="number" id="valKg" oninput="convertWeight('kg')" class="w-full p-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg"></div>
+          <div><label class="text-xs font-semibold text-slate-500">Grams</label><input type="number" id="valGram" oninput="convertWeight('gram')" class="w-full p-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ADVANCED QUICK SOCIAL MODAL (Supports Fullscreen & User Search) -->
+  <div id="quickSocialModal" class="fixed inset-0 bg-black/70 z-50 hidden flex items-center justify-center p-2 sm:p-4 transition-all duration-300">
+    <div id="qsContainer" class="bg-white dark:bg-slate-900 rounded-2xl max-w-4xl w-full shadow-2xl relative flex flex-col h-[580px] overflow-hidden border border-slate-200 dark:border-slate-700 transition-all duration-300">
+      
+      <!-- Social Header with Fullscreen Toggle -->
+      <div class="flex justify-between items-center px-4 py-3 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+          <i class="fa-solid fa-globe text-brand-600 text-xl"></i>
+          <h3 class="font-extrabold text-base tracking-wide">Quick Social</h3>
+        </div>
+        <div class="flex items-center gap-2">
+          <!-- Full Screen Button -->
+          <button onclick="toggleQsFullScreen()" title="Toggle Fullscreen" class="text-slate-500 hover:text-slate-800 dark:hover:text-white p-1.5 rounded-lg bg-slate-100 dark:bg-slate-700 transition">
+            <i id="fsIcon" class="fa-solid fa-expand text-xs"></i>
+          </button>
+          <!-- Close Button -->
+          <button onclick="closeQuickSocialModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-white p-1.5 rounded-lg transition"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+      </div>
+
+      <!-- Social Body (Grid: Search, Profile & Chat) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 flex-grow overflow-hidden">
+        
+        <!-- Left Sidebar: Profile & Search Directory -->
+        <div class="p-3 border-r border-slate-200 dark:border-slate-700 overflow-y-auto space-y-4 bg-slate-50/50 dark:bg-slate-950/40">
+          
+          <!-- My Profile Box -->
+          <div class="bg-white dark:bg-slate-800 p-3 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+            <h4 class="font-bold text-xs mb-2 flex items-center gap-1.5"><i class="fa-solid fa-circle-user text-brand-500"></i> My Profile</h4>
+            <div class="space-y-2">
+              <input type="text" id="profUsername" class="w-full p-1.5 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded focus:border-brand-500" placeholder="Username">
+              <input type="text" id="profBio" class="w-full p-1.5 text-xs bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded focus:border-brand-500" placeholder="Bio status">
+              <button onclick="saveMyProfile()" class="w-full py-1.5 bg-brand-600 text-white font-bold rounded text-[11px] hover:bg-brand-700 transition shadow">Save Profile</button>
+            </div>
+          </div>
+
+          <!-- Search Bar for Searching Users -->
+          <div>
+            <h4 class="font-bold text-xs mb-1.5 text-slate-500 flex items-center justify-between">
+              <span><i class="fa-solid fa-magnifying-glass"></i> Search Users</span>
+            </h4>
+            <input type="text" id="searchUserBox" oninput="renderUserDirectory()" class="w-full p-2 text-xs bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg mb-2 focus:outline-none focus:border-brand-500" placeholder="Type username to search...">
+            
+            <div id="userDirectory" class="space-y-1.5 text-xs max-h-48 overflow-y-auto pr-1">
+              <!-- Dynamically populated users -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Main Chat Box -->
+        <div class="md:col-span-2 p-3 flex flex-col justify-between h-full bg-white dark:bg-slate-900">
+          
+          <!-- Active Chat Banner -->
+          <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-2 mb-2">
+            <div>
+              <h4 id="activeChatTitle" class="font-bold text-xs flex items-center gap-1.5"><i class="fa-solid fa-earth-americas text-emerald-500"></i> World Chat</h4>
+              <p id="activeChatSub" class="text-[9px] text-slate-400">Global Public Room</p>
+            </div>
+            <button onclick="switchToWorldChat()" class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-[10px] font-semibold rounded hover:bg-slate-200 transition">Global World Chat</button>
+          </div>
+
+          <!-- Chat Stream -->
+          <div id="chatMessages" class="flex-grow overflow-y-auto p-3 bg-slate-50 dark:bg-slate-950/60 rounded-xl border border-slate-200 dark:border-slate-800 space-y-2 text-xs mb-2"></div>
+
+          <!-- Message Input Field -->
+          <div class="flex gap-1.5">
+            <input type="text" id="chatInput" onkeydown="if(event.key==='Enter') sendChatMessage()" class="flex-grow p-2.5 text-xs bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl focus:outline-none focus:border-brand-500" placeholder="Type a message...">
+            <button onclick="sendChatMessage()" class="px-4 py-2.5 bg-brand-600 text-white font-bold rounded-xl text-xs hover:bg-brand-700 transition flex items-center gap-1">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-6 mt-auto text-center text-xs text-slate-500">
+    <p>© 2026 Quick Utility. All rights reserved.</p>
+  </footer>
+
+  <!-- JavaScript Code -->
+  <script>
+    // Tab Switcher
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-600', 'text-white');
+        btn.classList.add('text-slate-600', 'dark:text-slate-400');
+      });
+      document.getElementById('content-' + tabId).classList.remove('hidden');
+      const activeBtn = document.getElementById('tab-' + tabId);
+      activeBtn.classList.add('bg-brand-600', 'text-white');
+      activeBtn.classList.remove('text-slate-600', 'dark:text-slate-400');
+    }
+
+    // Dark Mode
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      const icon = document.getElementById('themeIcon');
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        icon.className = 'fa-solid fa-moon';
+      } else {
+        html.classList.add('dark');
+        icon.className = 'fa-solid fa-sun';
+      }
+    }
+
+    // Modal & Fullscreen Controls
+    let isFs = false;
+    function openQuickSocialModal() {
+      document.getElementById('quickSocialModal').classList.remove('hidden');
+      renderUserDirectory();
+      renderMessages();
+    }
+    function closeQuickSocialModal() {
+      document.getElementById('quickSocialModal').classList.add('hidden');
+    }
+
+    function toggleQsFullScreen() {
+      const container = document.getElementById('qsContainer');
+      const icon = document.getElementById('fsIcon');
+      if(!isFs) {
+        container.classList.remove('max-w-4xl', 'h-[580px]', 'rounded-2xl');
+        container.classList.add('w-screen', 'h-screen', 'rounded-none', 'max-w-none');
+        icon.className = 'fa-solid fa-compress text-xs';
+        isFs = true;
+      } else {
+        container.classList.add('max-w-4xl', 'h-[580px]', 'rounded-2xl');
+        container.classList.remove('w-screen', 'h-screen', 'rounded-none', 'max-w-none');
+        icon.className = 'fa-solid fa-expand text-xs';
+        isFs = false;
+        }
+    }
+
+    // Quick Social State
+    let currentUser = localStorage.getItem('qs_username') || 'User_' + Math.floor(Math.random()*1000);
+    let currentBio = localStorage.getItem('qs_bio') || 'Hello Quick Social!';
+    let currentChatTarget = 'world';
+
+    document.getElementById('profUsername').value = currentUser;
+    document.getElementById('profBio').value = currentBio;
+
+    function saveMyProfile() {
+      const u = document.getElementById('profUsername').value.trim();
+      const b = document.getElementById('profBio').value.trim();
+      if(!u) { alert('Username cannot be empty!'); return; }
+      currentUser = u;
+      currentBio = b;
+      localStorage.setItem('qs_username', currentUser);
+      localStorage.setItem('qs_bio', currentBio);
+      
+      let users = JSON.parse(localStorage.getItem('qs_users') || '[]');
+      if(!users.some(x => x.name === currentUser)) {
+        users.push({ name: currentUser, bio: currentBio });
+        localStorage.setItem('qs_users', JSON.stringify(users));
+      }
+      alert('Profile saved!');
+      renderUserDirectory();
+    }
+
+    // Render & Search User Directory
+    function renderUserDirectory() {
+      let users = JSON.parse(localStorage.getItem('qs_users') || '[]');
+      if(!users.some(x => x.name === currentUser)) {
+        users.push({ name: currentUser, bio: currentBio });
+        localStorage.setItem('qs_users', JSON.stringify(users));
+      }
+      
+      const searchTxt = document.getElementById('searchUserBox')?.value.toLowerCase().trim() || '';
+      const dir = document.getElementById('userDirectory');
+      dir.innerHTML = '';
+
+      let filteredUsers = users.filter(u => u.name.toLowerCase().includes(searchTxt));
+
+      if(filteredUsers.length === 0) {
+        dir.innerHTML = `<p class="text-[10px] text-slate-400 text-center py-2">No user found</p>`;
+        return;
+      }
+
+      filteredUsers.forEach(usr => {
+        dir.innerHTML += `
+          <div class="flex justify-between items-center p-2 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+            <div>
+              <span class="font-bold text-slate-800 dark:text-slate-200 text-xs">@${usr.name}</span>
+              <p class="text-[9px] text-slate-400 truncate max-w-[90px]">${usr.bio}</p>
+            </div>
+            <button onclick="startDM('${usr.name}')" class="px-2.5 py-1 bg-brand-600 text-white text-[10px] rounded-md font-semibold hover:bg-brand-700 transition">Chat</button>
+          </div>
+        `;
+      });
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if(!text) return;
+      
+      let messages = JSON.parse(localStorage.getItem('qs_messages') || '[]');
+      messages.push({
+        sender: currentUser,
+        target: currentChatTarget,
+        text: text,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      });
+      localStorage.setItem('qs_messages', JSON.stringify(messages));
+      input.value = '';
+      renderMessages();
+    }
+
+    function renderMessages() {
+      const box = document.getElementById('chatMessages');
+      let messages = JSON.parse(localStorage.getItem('qs_messages') || '[]');
+      box.innerHTML = '';
+      
+      let filtered = messages.filter(m => {
+        if(currentChatTarget === 'world') return m.target === 'world';
+        return (m.target === currentChatTarget && m.sender === currentUser) || (m.target === currentUser && m.sender === currentChatTarget);
+      });
+
+      if(filtered.length === 0) {
+        box.innerHTML = `<p class="text-center text-slate-400 py-10">No messages yet. Start chatting!</p>`;
+        return;
+      }
+
+      filtered.forEach(m => {
+        const isMe = m.sender === currentUser;
+        box.innerHTML += `
+          <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+            <span class="text-[8px] text-slate-400 mb-0.5">@${m.sender} • ${m.time}</span>
+            <div class="p-2.5 rounded-xl max-w-[85%] text-xs ${isMe ? 'bg-brand-600 text-white rounded-br-none' : 'bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-bl-none'}">
+              ${m.text}
+              </div>
+          </div>
+        `;
+      });
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function switchToWorldChat() {
+      currentChatTarget = 'world';
+      document.getElementById('activeChatTitle').innerHTML = `<i class="fa-solid fa-earth-americas text-emerald-500"></i> World Chat`;
+      document.getElementById('activeChatSub').innerText = 'Global Public Room';
+      renderMessages();
+    }
+
+    function startDM(targetUser) {
+      if(targetUser === currentUser) { alert("You can't message yourself!"); return; }
+      currentChatTarget = targetUser;
+      document.getElementById('activeChatTitle').innerHTML = `<i class="fa-solid fa-user-shield text-brand-500"></i> Direct Chat: @${targetUser}`;
+      document.getElementById('activeChatSub').innerText = 'Private Chat';
+      renderMessages();
+    }
+
+    window.onload = function() {
+      generateApplication();
+      setInterval(() => { if(!document.getElementById('quickSocialModal').classList.contains('hidden')) renderMessages(); }, 2000);
+    };
+
+    // Tools
+    function generateApplication() {
+      const type = document.getElementById('appType').value;
+      const name = document.getElementById('appName').value || '[Your Name]';
+      const receiver = document.getElementById('appReceiver').value || '[Authority Name]';
+      const start = document.getElementById('appStartDate').value || '[Start Date]';
+      const end = document.getElementById('appEndDate').value || '[End Date]';
+      const reason = document.getElementById('appReason').value || '[Reason]';
+      
+      let text = `Subject: Application for ${type}\n\nRespected ${receiver},\n\nI am writing to request leave from ${start} to ${end} due to ${reason}.\n\nKindly approve.\n\nThank you,\n${name}`;
+      document.getElementById('appResultBox').value = text;
+    }
+    function copyToClipboard(id) {
+      const el = document.getElementById(id);
+      el.select();
+      navigator.clipboard.writeText(el.value);
+      alert('Copied to clipboard!');
+    }
+    function updateWordCount() {
+      const t = document.getElementById('counterInput').value;
+      document.getElementById('wordCount').innerText = t.trim() ? t.trim().split(/\s+/).length : 0;
+      document.getElementById('charCount').innerText = t.length;
+      document.getElementById('sentenceCount').innerText = t.trim() ? t.split(/[.!?]+/).filter(Boolean).length : 0;
+    }
+    function generatePassword() {
+      const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';
+      let pwd = '';
+      for(let i=0; i<12; i++) pwd += chars.charAt(Math.floor(Math.random()*chars.length));
+      document.getElementById('pwdResult').value = pwd;
+    }
+    let qrInst = null;
+    function generateQRCode() {
+      const txt = document.getElementById('qrText').value;
+      const c = document.getElementById('qrcode');
+      c.innerHTML = '';
+      if(!txt) return;
+      qrInst = new QRCode(c, { text: txt, width: 120, height: 120 });
+    }
+    function convertDist(t) {
+      const km = document.getElementById('valKm'), m = document.getElementById('valMile');
+      if(t==='km') m.value = km.value ? (km.value * 0.621371).toFixed(3) : '';
+      if(t==='mile') km.value = m.value ? (m.value / 0.621371).toFixed(3) : '';
+    }
+    function convertLength(t) {
+      const cm = document.getElementById('valCm'), m = document.getElementById('valMeter');
+      if(t==='cm') m.value = cm.value ? (cm.value / 100).toFixed(3) : '';
+      if(t==='meter') cm.value = m.value ? (m.value * 100).toFixed(1) : '';
+    }
+    function convertWeight(t) {
+      const kg = document.getElementById('valKg'), g = document.getElementById('valGram');
+      if(t==='kg') g.value = kg.value ? (kg.value * 1000).toFixed(1) : '';
+      if(t==='gram') kg.value = g.value ? (g.value / 1000).toFixed(3) : '';
+    }
+  </script>
+</body>
+</html>
